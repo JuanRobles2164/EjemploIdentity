@@ -125,7 +125,7 @@ namespace EjemploIdentity.Controllers
         {
             orden.Pedido.ProductosPedido = new List<PedidoProducto>();
             ICollection<ValidationResult> resultado = new List<ValidationResult>(); // Will contain the results of the validation
-
+            var tokenLong = orden.Token;
             List<GestionProductoPedidoViewModel> productos = AppViewModel.PedidosEnProceso[orden.Token];
             if (productos != null)
             {
@@ -169,7 +169,7 @@ namespace EjemploIdentity.Controllers
             }
             
             orden.SetearBases(db);
-            
+            orden.Token = tokenLong;
             return View(orden);
         }
 
