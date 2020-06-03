@@ -24,19 +24,31 @@ namespace EjemploIdentity.Controllers
             ViewBag.FechaRSortParm = "fechaRegistro";
             ViewBag.FechaESortParm = "fechaEntrega";
             ViewBag.EstadoSortParm = "Estado";
-
-            if (searchString != null)
+            var pedidos = db.Pedidos.Include(p => p.Cliente);
+            if (!string.IsNullOrEmpty(searchString))
             {
-                page = 1;
+                //page = 1;
+                //pedidos = db.Pedidos.Where(p => p.Cliente.NombreCompleto.Equals(searchString));
+                //CONSULTA
+                pedidos = pedidos.OrderBy(s => s.Cliente.NombreCompleto)
+                    .Where(s => s.Cliente.NombreCompleto.
+                    Equals(searchString));
+                //searchString = currentFilter;
+                //No es necesario que fuera un Contains, porque ya llega el nombre completo tal y como es
+                //Aqui le digo que como encuentra un resultado entonces el tamaño de los resultados que va a mostrar
+                //pues será 1 y va a puntar a la página 1.
+                //A VER SOTO hable!
+                //ES POR ESTO, COMO LE ESTOY DICIENDO QUE RETORNE UN RESULTADO. Bueno que el tamaño de la lista será de 1 cuando busque SI ;V
+
             }
             else
             {
                 searchString = currentFilter;
             }
 
-            ViewBag.CurrentFilter = searchString;
-
-            var pedidos = db.Pedidos.Include(p => p.Cliente);
+            ViewBag.CurrentFilter = searchString; //Probamos? O sea como para ver la duda no jaja profe,
+                                                  //
+                                                  //pedidos = db.Pedidos.Include(p => p.Cliente);
 
             //Casos de ordenamiento segun la columna que se seleccione o por defecto si no se hace
             switch (sortOrder)
@@ -232,6 +244,40 @@ namespace EjemploIdentity.Controllers
             db.Pedidos.Remove(pedido);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public JsonResult BuscarPedidos(string term)
+        {
+            var pedidos_cliente = db.Pedidos.Where(p => p.Cliente.NombreCompleto.Contains(term)).Select(p => p.Cliente.NombreCompleto).ToList();
+            //var _listaPedidos = db.PedidoProductos.Where(x => x.Descripcion.Contains(term)).Select(x => x.Descripcion).ToList();
+            if (pedidos_cliente.Count() > 0)
+            {
+                return Json(pedidos_cliente, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                pedidos_cliente.Clear();
+                string sms = "No se encontraron resultados :c";
+                pedidos_cliente.Add(sms);
+            }
+            return Json(pedidos_cliente, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult NombrePedido(string term)
+        {
+            var Producto = db.Productos.Where(p => p.Descripcion.Contains(term)).Select(p => p.Descripcion).ToList();
+            //var _listaPedidos = db.PedidoProductos.Where(x => x.Descripcion.Contains(term)).Select(x => x.Descripcion).ToList();
+            if (Producto.Count() > 0)
+            {
+                return Json(Producto.ToList(), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                Producto.Clear();
+                string sms = "No se encontraron resultados :c";
+                Producto.Add(sms);
+            }
+            return Json(Producto.ToList(), JsonRequestBehavior.AllowGet);
         }
 
 

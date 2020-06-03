@@ -11,11 +11,21 @@
 <h2>Pedidos</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <h2><a href="@Url.Action("Create","PedidoCP",null)" class="btn btn-primary"><i class="fas fa-plus"></i> Crear Pedido</a></h2>
 </p>
+
+@using (Html.BeginForm("Index", "PedidoCP", FormMethod.Get))
+{
+    <p>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control navbar-left", id = "idusuario" })
+        <button type="submit" value="Search" class="btn btn-group-lg btn-success"><i class="fas fa-search"></i></button>
+    </p>
+}
+
+
 <table class="table">
     <tr>
-            
+
         <th>
             @Html.ActionLink("Nombre Completo", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
@@ -23,7 +33,7 @@
             @Html.ActionLink("Fecha Registro", "Index", new { sortOrder = ViewBag.FechaRSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.ActionLink("Fecha Entrega", "Index", new { sortOrder = ViewBag.FechaESortParm, currentFilter = ViewBag.CurrentFilter })      
+            @Html.ActionLink("Fecha Entrega", "Index", new { sortOrder = ViewBag.FechaESortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
             @Html.ActionLink("Estado del Pedido", "Index", new { sortOrder = ViewBag.EstadoSortParm, currentFilter = ViewBag.CurrentFilter })
@@ -61,3 +71,17 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+
+@section scripts {
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+
+    <script>
+        $(function () {
+            $("#idusuario").autocomplete({
+                source: '@Url.Action("BuscarPedidos","PedidoCP")',
+            });
+        });
+    </script>
+}
