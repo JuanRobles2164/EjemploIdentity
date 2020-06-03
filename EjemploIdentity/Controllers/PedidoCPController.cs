@@ -32,7 +32,7 @@ namespace EjemploIdentity.Controllers
                 //CONSULTA
                 pedidos = pedidos.OrderBy(s => s.Cliente.NombreCompleto)
                     .Where(s => s.Cliente.NombreCompleto.
-                    Equals(searchString));
+                    Equals(searchString)); //Contains(ahfhfhf
                 //searchString = currentFilter;
                 //No es necesario que fuera un Contains, porque ya llega el nombre completo tal y como es
                 //Aqui le digo que como encuentra un resultado entonces el tamaño de los resultados que va a mostrar
@@ -246,6 +246,7 @@ namespace EjemploIdentity.Controllers
             return RedirectToAction("Index");
         }
 
+        
         public JsonResult BuscarPedidos(string term)
         {
             var pedidos_cliente = db.Pedidos.Where(p => p.Cliente.NombreCompleto.Contains(term)).Select(p => p.Cliente.NombreCompleto).ToList();
