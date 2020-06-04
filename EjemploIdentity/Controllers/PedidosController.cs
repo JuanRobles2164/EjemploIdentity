@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using EjemploIdentity.Models;
@@ -14,9 +15,28 @@ namespace EjemploIdentity.Controllers
     {
         private Contexto db = new Contexto();
 
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "cliente" : "";
+            ViewBag.FechaRSortParm = "fechaRegistro";
+            ViewBag.FechaESortParm = "fechaEntrega";
+            ViewBag.EstadoSortParm = "Estado";
             var pedidos = db.Pedidos.Include(p => p.Cliente);
+            switch (sortOrder)
+            {
+                case "cliente":
+                    pedidos = db.Pedidos.Include(p => p.Cliente).OrderBy(s => s.Cliente.NombreCompleto);
+                    break;
+                case "fechaRegistro":
+                    pedidos = db.Pedidos.Include(p => p.Cliente).OrderBy(s => s.FechaRegistro);
+                    break;
+                case "fechaEntrega":
+                    pedidos = db.Pedidos.Include(p => p.Cliente).OrderBy(s => s.FechaEntrega);
+                    break;
+                case "Estado":
+                    pedidos = db.Pedidos.Include(p => p.Cliente).OrderBy(s => s.EstadoPedido);
+                    break;
+            }
             return View(pedidos.ToList());
         }
 
