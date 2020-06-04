@@ -118,6 +118,7 @@
                         <div class="form-group">
                             @Html.LabelFor(model => model.PedidoProductoBase.ProductoId, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-9">
+                                <input id="inputAutoComplete" class="form-control"/>
                                 @Html.DropDownListFor(model => model.PedidoProductoBase.ProductoId, Model.Productos, htmlAttributes: new { @class = "form-control", @id = "SelectProducto" })
                                 @Html.ValidationMessageFor(model => model.PedidoProductoBase.ProductoId, "", new { @class = "text-danger" })
                             </div>
@@ -176,6 +177,32 @@
         /*$(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })*/
+        var ListaProductos = null;
+        var ProductosNombres = [];
+        $(document).ready(function() {
+            $.ajax({
+                url: '@Url.Action("getAllProducts","Productos")',
+                type: 'GET',
+                async: true,
+                data: null,
+                success: function (response) {
+                    console.log(response);
+                    ListaProductos = response;
+                    ListaProductos.forEach(element => {
+	
+                    });
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            })
+        });
+
+        $('#inputAutoComplete').autocomplete({
+            source: ListaProductos,
+            minLength: 2,
+            delay: 300
+        });
 
         function actualizarTablaProductos() {
             var producto = $("#SelectProducto option:selected").text();

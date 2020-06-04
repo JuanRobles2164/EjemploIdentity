@@ -37,7 +37,7 @@ namespace EjemploIdentity.Controllers
                 //No es necesario que fuera un Contains, porque ya llega el nombre completo tal y como es
                 //Aqui le digo que como encuentra un resultado entonces el tamaño de los resultados que va a mostrar
                 //pues será 1 y va a puntar a la página 1.
-                //A VER SOTO hable!
+                
                 //ES POR ESTO, COMO LE ESTOY DICIENDO QUE RETORNE UN RESULTADO. Bueno que el tamaño de la lista será de 1 cuando busque SI ;V
 
             }

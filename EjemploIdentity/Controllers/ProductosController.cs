@@ -19,6 +19,10 @@ namespace EjemploIdentity.Controllers
         {
             return View(db.Productos.ToList());
         }
+        public JsonResult getAllProducts()
+        {
+            return Json(db.Productos.ToList(), JsonRequestBehavior.AllowGet);
+        }
 
         // GET: Productos/Details/5
         public ActionResult Details(int? id)
